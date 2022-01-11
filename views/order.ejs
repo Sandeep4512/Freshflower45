@@ -1,0 +1,151 @@
+<%- include('partials/header.ejs')   %>
+<link rel="stylesheet"  href="/styles/nav.css" />
+<script src="/javascript/nav.js"></script>
+
+<style>
+    .cartItemContainer{
+        display: flex;
+        margin-top: 100px;
+        flex-wrap: wrap;
+    }
+    .orderHolder{
+        background-color: white;
+        padding: 15px;
+        border: 2px solid green;
+        margin-top:10px
+
+    }
+    .ShippingAdd{
+        /* border: 1px solid red; */
+        border: 2px solid green;
+        margin-top: -50px;
+        padding: 0px 10px;
+        height: 120px;
+        background-color: white;
+        
+    }
+     
+        
+   .OrderSummary{
+    background-color: white;
+    padding: 10px;
+    width: 280px;
+    height: 180px;
+    border: 2px solid green;
+    margin-top: 15px;
+    }
+    .row{
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-top: -22px;
+    }
+    .OrderSummary button{
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 10px;
+      min-width: 260px;
+      border-radius: 8px;
+      margin-top: -5px;
+    }
+   
+.col2{
+    flex: 2;
+    padding: 0 20px;
+    min-width: 260px;
+
+    
+}
+.col1{
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    justify-content: center;
+}
+.cartItem{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-top: 20px;
+  
+}
+ 
+
+</style>
+<h2 style="text-align: center; margin-top: 100px; " >Place Order</h2>
+<div class="msgBox"></div>
+<div class="cartItemContainer">
+    <div class="col2">
+        <div class="ShippingAdd"></div>
+        <div style="font-size: 18px;" class="orderHolder">
+            <h3>Order Items</h3>
+        </div>
+    </div>
+    <div class="col1">
+       <div class="OrderSummary" >
+           
+          
+       </div>
+    </div>
+</div>
+
+<script>
+
+let totalAmount=0;
+    const itemInCart=localStorage.getItem("cartItems")?
+    JSON.parse(localStorage.getItem("cartItems"))
+    :[];
+
+  const shippingInfo=localStorage.getItem("shippingInfo")?
+      JSON.parse(localStorage.getItem("shippingInfo"))
+      :null;
+
+const ShippingAddressHolder=document.createElement('div');
+ShippingAddressHolder.innerHTML=`<div style="display:flex;flex-direction:column;align-item:center;justify-content:center;">
+    <h3>Shipping Address</h3>
+        <p style="font-size:20px;margin-top:-3px "> ${shippingInfo.userName},${shippingInfo.address},${shippingInfo.city}<br>${shippingInfo.postalcode}</br> <p>
+    </div>`;
+  const ShippingAdd=document.querySelector(".ShippingAdd") ;
+   ShippingAdd.appendChild(ShippingAddressHolder);
+
+   function createcartItem(item){
+        return `<img width="50px" height="50px" src=${item.img} />
+                <a href="/product/${item._id}">${item.name}</a>
+                <span>${item.selectedQty} X &#8377;${item.price}= &#8377;${item.price*item.selectedQty}</span>
+                `
+    }   
+    itemInCart.forEach(function(item){
+           const cartItemHolder=document.createElement('div');
+           cartItemHolder.className="cartItem";
+           cartItemHolder.innerHTML=createcartItem(item);
+           const orderHolder=document.querySelector(".orderHolder");
+           orderHolder.appendChild(cartItemHolder);  
+     });
+     if(itemInCart.length!=0){
+        itemInCart.forEach(function(item){
+            totalAmount=totalAmount+(Number(item.selectedQty)*item.price);
+        })
+        const user=localStorage.getItem("userInfo")?
+        JSON.parse(localStorage.getItem("userInfo"))
+        :null
+     }
+// order Summery 
+const OrderSummary=document.querySelector('.OrderSummary');
+      OrderSummary.innerHTML=`
+      <h3> Order Summary</h3>
+         <div class="row">
+              <p>items :-</p>
+              <p> &#8377;${totalAmount} </p>
+         </div>
+         <div style="margin-top:-20px" class="row">
+             <p>Shipping:-</p>
+             <p> &#8377;0</p>
+         </div>
+         <button>Order Now</button>
+         `;
+
+
+</script>
+<%- include('partials/footer.ejs')   %>
