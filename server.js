@@ -23,8 +23,11 @@ const Mongoose = require('mongoose'),
 const app = ex();
 app.use(ex.static("public"));   // static file use krne ke liye
 
-app.use(ex.json());              //to parse the upcoming post request data    
-app.get('/', root)
+app.use(ex.json());              //to parse the upcoming post request data  
+
+// app.get('/', root)     //  -> root file to first of all 
+
+app.get('/', products)
 app.get('/addproducts',addProducts)
 app.get('/remove',remove)
 app.get('/products',products)
